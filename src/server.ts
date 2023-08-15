@@ -1,11 +1,20 @@
 // import app from 'app';
 import app from './app';
 import dotenv from 'dotenv';
+import { Sequelize } from 'sequelize';
 
 dotenv.config();
 
-const { PORT = 3000 } = process.env;
+const { PORT, POSTGRESQL_CONNECTION } = process.env;
 
-app.listen(PORT, () => {
-  console.log(`[server]: Server is running at http://localhost:${PORT}`);
-});
+const sequelize = new Sequelize(`${POSTGRESQL_CONNECTION}`);
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+    app.listen(PORT, () => {
+      console.log(`[server]: Server is running at http://localhost:${PORT}`);
+    });
+  })
+  .catch(err => console.error('Unable to connect to the database:', err));
