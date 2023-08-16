@@ -21,6 +21,7 @@ app.use((req, res) => {
 // ERROR ROUTER
 app.use((err, req, res, next) => {
   const { status = 500, message } = err;
+  console.log('error handled: ', status, message);
   res.status(status).json({ message });
 });
 

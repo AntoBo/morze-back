@@ -7,7 +7,7 @@ const errorMessageList = {
   500: 'Server error',
 };
 
-export default (status = 500, message = errorMessageList[500]) => {
+export default (status = 500, message = errorMessageList[status]) => {
   const error: any = new Error(message);
   error.status = status;
   return error;
