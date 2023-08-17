@@ -2,7 +2,7 @@ import HttpError from '../helpers/HttpError';
 import { User } from '../models/User';
 
 const getAll = async (req, res) => {
-  const users = await User.findAll({ where: { isAdmin: false } });
+  const users = await User.findAll({ where: { isAdmin: false }, order: ['name'] });
 
   res.json(users);
 };

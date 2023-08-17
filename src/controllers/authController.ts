@@ -44,10 +44,11 @@ const login = async (req, res, next) => {
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
+  delete user.password;
 
   res.json({
     token,
-    name: user.name,
+    user,
   });
 };
 export { signup, login };
