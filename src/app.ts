@@ -1,8 +1,10 @@
 import express from 'express';
 import authRouter from './routes/api/auth';
 import usersRouter from './routes/api/users';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
