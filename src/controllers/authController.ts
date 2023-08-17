@@ -22,7 +22,16 @@ const signup = async (req, res, next) => {
 
   delete newUser.password;
 
-  res.status(201).json(newUser);
+  const payload = {
+    id: newUser.id,
+  };
+
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
+
+  res.json({
+    token,
+    user: { id: newUser.id, name: newUser.name, isBanned: newUser.isBanned, isAdmin: newUser.isAdmin },
+  });
 };
 
 const login = async (req, res, next) => {
@@ -30,13 +39,17 @@ const login = async (req, res, next) => {
   const user = await User.findOne({ where: { name }, attributes: { include: ['password'] } });
 
   if (!user) {
-    return next(HttpError(401, 'Email or password is invalid'));
+    return next(HttpError(401, 'No user matches'));
+  }
+
+  if (user.isBanned) {
+    return next(HttpError(401, 'User is banned'));
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
 
   if (!passwordCompare) {
-    return next(HttpError(401, 'Email or password is invalid'));
+    return next(HttpError(401, 'No user matches'));
   }
 
   const payload = {
@@ -44,11 +57,10 @@ const login = async (req, res, next) => {
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
-  delete user.password;
 
   res.json({
     token,
-    user,
+    user: { id: user.id, name: user.name, isBanned: user.isBanned, isAdmin: user.isAdmin },
   });
 };
 export { signup, login };
