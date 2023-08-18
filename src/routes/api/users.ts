@@ -4,7 +4,7 @@ import { auth } from '../../middlewares/auth';
 
 const usersRouter = express.Router();
 
-usersRouter.get('/', auth, getAll);
+usersRouter.get('/', getAll);
 usersRouter.delete('/:id', remove);
 usersRouter.put('/:id', ban);
 // router.post('/signup', validateBody(authSchemas.signup), controller.signup);

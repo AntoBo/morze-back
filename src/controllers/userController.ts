@@ -1,8 +1,29 @@
 import HttpError from '../helpers/HttpError';
+import { Op } from 'sequelize';
+
 import { User } from '../models/User';
 
+interface whereClause {
+  where: { isAdmin: boolean; name?: any };
+}
+
 const getAll = async (req, res) => {
-  const users = await User.findAll({ where: { isAdmin: false } });
+  const { query } = req.query;
+
+  const whereClause: whereClause = {
+    where: {
+      isAdmin: false,
+    },
+  };
+
+  if (query) {
+    whereClause.where.name = { [Op.like]: `%${query}%` };
+  }
+
+  const users = await User.findAll({
+    ...whereClause,
+    order: ['id'],
+  });
 
   res.json(users);
 };
