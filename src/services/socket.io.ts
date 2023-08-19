@@ -1,3 +1,5 @@
+import { validateBody } from 'helpers/validateWrapper';
+import messageSchema from 'middlewares/validators/messageSchema';
 import { Server } from 'socket.io';
 
 const users = {};
@@ -12,17 +14,12 @@ export const ioService = server => {
   io.on('connection', socket => {
     console.log('User connected:', socket.id);
 
-    // Handle user authentication
     socket.on('authenticate', user => {
       users[socket.id] = user;
-      console.log('users :>> ', users);
     });
 
-    // Handle private messages
+    // Handle messages
     socket.on('private-message', ({ recipientId, message }) => {
-      console.log('recipientId :>> ', recipientId);
-      console.log('message :>> ', message);
-      console.log('users :>> ', users);
       const sender = users[socket.id];
       const recipientSocket = Object.keys(users).find(socketId => users[socketId]?.id === recipientId);
 
