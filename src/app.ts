@@ -2,6 +2,7 @@ import express from 'express';
 import authRouter from './routes/api/auth';
 import usersRouter from './routes/api/users';
 import cors from 'cors';
+import { auth } from './middlewares/auth';
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
 
 // ROUTES
 app.use(authRouter);
+app.use(auth);
 app.use('/users', usersRouter);
 
 // 404 ROUTE
