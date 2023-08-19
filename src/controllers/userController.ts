@@ -17,7 +17,7 @@ const getAll = async (req, res) => {
   };
 
   if (query) {
-    whereClause.where.name = { [Op.like]: `%${query}%` };
+    whereClause.where.name = { [Op.iLike]: `%${query}%` };
   }
 
   const users = await User.findAll({
