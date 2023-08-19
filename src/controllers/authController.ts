@@ -9,7 +9,7 @@ dotenv.config();
 const { SECRET_KEY } = process.env;
 
 const signup = async (req, res, next) => {
-  const { name, password, isAdmin } = req.body;
+  const { name, password } = req.body;
   const user = await User.findOne({ where: { name } });
 
   if (user) {
@@ -18,7 +18,7 @@ const signup = async (req, res, next) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await User.create({ name, password: hashPassword, isAdmin });
+  const newUser = await User.create({ name, password: hashPassword, isAdmin: name === 'admin' ? true : false });
 
   delete newUser.password;
 
